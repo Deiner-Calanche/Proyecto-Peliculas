@@ -80,7 +80,3 @@ El sistema se desarrollará con enfoque administrativo para la **gestión de pel
 🔸 No se implementarán módulos de seguridad en esta fase.
 🔸 No está orientado a usuarios finales (estudiantes, docentes, público en general).
 
----
-📌 **Autor:** [Tu Nombre o Nombre del Equipo]
-📌 **Repositorio:** [Enlace al repositorio de GitHub]
-📌 **Licencia:** [Tipo de licencia]
