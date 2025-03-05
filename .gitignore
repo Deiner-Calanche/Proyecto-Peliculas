@@ -1,0 +1,5 @@
+
+# No subir carpeta Node-modules a git
+node_modules
+texto.txt
+pruebas.http
