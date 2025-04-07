@@ -4,49 +4,38 @@ const Genero = require('../models/Genero');
 
 const router = Router();
 
-router.post(
-    '/',
-    [
-        check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-        check('estado', 'Estado inválido, debe ser "Activo" o "Inactivo"').isIn(['Activo', 'Inactivo']),
-        check('descripcion', 'La descripción es obligatoria').not().isEmpty()
-    ],
-    async function (req, res) {
-        try {
-            console.log('Datos recibidos en el servidor:', req.body);
-
-            // Validar errores antes de procesar la solicitud
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array() });
-            }
-
-            // Verificar si el género ya existe
-            const generoExistente = await Genero.findOne({ nombre: req.body.nombre });
-            if (generoExistente) {
-                return res.status(400).json({ message: 'El género ya existe' });
-            }
-
-            // Crear el nuevo género
-            let genero = new Genero({
-                nombre: req.body.nombre,
-                estado: req.body.estado,
-                descripcion: req.body.descripcion,
-                createdAt: new Date(),
-                updatedAt: new Date()
-            });
-
-            // Guardar en la base de datos
-            genero = await genero.save();
-
-            // Responder con el objeto guardado
-            return res.status(201).json({ message: 'Género creado con éxito', data: genero });
-        } catch (error) {
-            console.error('Error en el servidor:', error);
-            return res.status(500).json({ message: 'Error en el servidor' });
+// Crear un nuevo género
+router.post('/', [
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('estado', 'Estado inválido, debe ser "Activo" o "Inactivo"').isIn(['Activo', 'Inactivo']),
+    check('descripcion', 'La descripción es obligatoria').not().isEmpty()
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
+
+        const generoExistente = await Genero.findOne({ nombre: req.body.nombre });
+        if (generoExistente) {
+            return res.status(400).json({ message: 'El género ya existe' });
+        }
+
+        const genero = new Genero({
+            nombre: req.body.nombre,
+            estado: req.body.estado,
+            descripcion: req.body.descripcion,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+
+        await genero.save();
+        return res.status(201).json({ message: 'Género creado con éxito', data: genero });
+    } catch (error) {
+        console.error('Error en el servidor:', error);
+        return res.status(500).json({ message: 'Error en el servidor' });
     }
-);
+});
 
 // Obtener todos los géneros
 router.get('/', async (req, res) => {
