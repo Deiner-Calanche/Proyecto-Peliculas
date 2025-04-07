@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check, validationResult } = require('express-validator');
-const Genero = require('../models/genero');
+const Genero = require('../models/Genero');
 
 const router = Router();
 
