@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const DirectorSchema = new Schema({
+const DirectorSchema = Schema({
     nombres: { type: String, required: true,unique: true },
     estado: { type: String, required: true, enum: ['Activo', 'Inactivo'] },
     createdAt: { type: Date, default: Date.now },

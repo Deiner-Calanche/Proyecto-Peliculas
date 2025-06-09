@@ -4,9 +4,10 @@ const Tipo = require('../models/Tipo');
 
 const router = Router();
 
-// Crear un tipo
+// Crear un tipo con validación de estado
 router.post('/', [
-    check('nombre', 'invalid.nombre').not().isEmpty()
+    check('nombre', 'invalid.nombre').not().isEmpty(),
+    check('estado', 'invalid.estado').isIn(['Activo', 'Inactivo'])  // validación estado
 ], async function(req, res) {
     try {
         const errors = validationResult(req);
@@ -17,6 +18,7 @@ router.post('/', [
         let tipo = new Tipo();
         tipo.nombre = req.body.nombre;
         tipo.descripcion = req.body.descripcion || '';
+        tipo.estado = req.body.estado;  // asignar estado desde el body
         tipo.createdAt = new Date();
         tipo.updatedAt = new Date();
 
@@ -39,9 +41,16 @@ router.get('/', async function(req, res) {
     }
 });
 
-// Actualizar un tipo por ID
-router.put('/:id', async function(req, res) {
+// Actualizar un tipo por ID (con validación del estado opcional)
+router.put('/:id', [
+    check('estado').optional().isIn(['Activo', 'Inactivo'])
+], async function(req, res) {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ message: errors.array() });
+        }
+
         const tipo = await Tipo.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!tipo) {
             return res.status(404).json({ message: 'Tipo no encontrado' });

@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const ProductoraSchema = new Schema({
+const ProductoraSchema = Schema({
     nombre: { type: String, required: true },
     estado: { type: String, required: true, enum: ['Activo', 'Inactivo'] },
     slogan: { type: String },

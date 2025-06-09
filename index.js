@@ -15,7 +15,7 @@ app.use('/generos', require('./routes/generoRoutes'));
 app.use('/directores', require('./routes/directorRoutes'));
 app.use('/productoras', require('./routes/productoraRoutes'));
 app.use('/tipos', require('./routes/tipoRoutes'));
-app.use('/media', require('./routes/mediaRoutes'));
+app.use('/medias', require('./routes/mediaRoutes'));
 
 // Ruta de prueba
 app.get('/', (req, res) => {
