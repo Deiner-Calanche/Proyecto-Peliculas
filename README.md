@@ -70,7 +70,10 @@ Es parte de la Evidencia de Aprendizaje 3 del curso Ingeniería Web II.
 ## 🔧 Instalacion
 
 
-git clone https://github.com/usuario/proyecto-api-peliculas.git
+git clone https://github.com/Deiner-Calanche/Proyecto-Peliculas.git
+
+---
+
 cd proyecto-api-peliculas
 
 ---
