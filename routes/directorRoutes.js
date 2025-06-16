@@ -1,11 +1,12 @@
 const { Router } = require('express');
 const Director = require('../models/Director');
 const { validationResult, check } = require('express-validator');
-
+const {validateJWT} = require('../middleware/validate-jwt');
+const {esAdministrador} = require('../middleware/validate-role-admin');
 const router = Router();
 
-// Crear un director
-router.post('/', [
+// Crear un director (solo admin)
+router.post('/', validateJWT, esAdministrador, [
     check('nombres', 'invalid.nombres').not().isEmpty(),
     check('estado', 'invalid.estado').isIn(['Activo', 'Inactivo']),
 ], async function(req, res) {
@@ -22,25 +23,22 @@ router.post('/', [
         director = await director.save();
         res.send(director);
     } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
+        res.status(500).json({ message: 'Error al crear director', error });
     }
 });
 
-// Obtener todos los directores
-
-router.get('/', async(req, res) => {
+// Obtener todos los directores (token requerido)
+router.get('/', validateJWT, async (req, res) => {
     try {
         const directores = await Director.find();
         res.send(directores);
     } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
+        res.status(500).json({ message: 'Error al listar directores', error });
     }
 });
 
-// Obtener un director por ID (Corrección)
-router.get('/:id', async function(req, res) {
+// Obtener un director por ID (token requerido)
+router.get('/:id', validateJWT, async function(req, res) {
     try {
         const { id } = req.params;
         const director = await Director.findById(id);
@@ -49,13 +47,12 @@ router.get('/:id', async function(req, res) {
         }
         res.send(director);
     } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
+        res.status(500).json({ message: 'Error al obtener director', error });
     }
 });
 
-// Actualizar un director por ID (Corrección)
-router.put('/:id', async function(req, res) {
+// Actualizar un director por ID (solo admin)
+router.put('/:id', validateJWT, esAdministrador, async function(req, res) {
     try {
         const { id } = req.params;
         const director = await Director.findByIdAndUpdate(id, req.body, { new: true });
@@ -64,13 +61,12 @@ router.put('/:id', async function(req, res) {
         }
         res.send(director);
     } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
+        res.status(500).json({ message: 'Error al actualizar director', error });
     }
 });
 
-// Eliminar un director por ID
-router.delete('/:id', async function(req, res) {
+// Eliminar un director por ID (solo admin)
+router.delete('/:id', validateJWT, esAdministrador, async function(req, res) {
     try {
         const { id } = req.params;
         const director = await Director.findByIdAndDelete(id);
@@ -79,8 +75,7 @@ router.delete('/:id', async function(req, res) {
         }
         res.send({ message: 'Director eliminado' });
     } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
+        res.status(500).json({ message: 'Error al eliminar director', error });
     }
 });
 

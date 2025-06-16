@@ -1,42 +1,55 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { body, validationResult } = require('express-validator');
+const express = require("express");
+const { check, validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
+const Usuario = require("../models/Usuario");
+const { generarJWT } = require("../helper/jwt");
+
 const router = express.Router();
 
-const JWT_SECRET = 'tu_secreto_jwt'; // Cambiar por variable de entorno
-
-router.post('/login', [
-  body('email').isEmail(),
-  body('password').exists()
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: 'Credenciales incorrectas' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Credenciales incorrectas' });
-
-    const payload = {
-      user: {
-        id: user.id,
-        rol: user.rol
+router.post(
+  "/login",
+  [
+    check("email", "El email es obligatorio").isEmail(),
+    check("password", "La contraseña es obligatoria").notEmpty()
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          message: "Errores de validación",
+          errors: errors.array()
+        });
       }
-    };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+      const { email, password } = req.body;
 
-    res.json({ token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error del servidor');
+      const user = await Usuario.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: "Usuario no encontrado" });
+      }
+
+      const isMatch = bcrypt.compareSync(password, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Contraseña incorrecta" });
+      }
+
+      const token = generarJWT(user);
+
+      res.json({
+        _id: user._id,
+        nombre: user.nombre,
+        email: user.email,
+        estado: user.estado,
+        rol: user.rol,
+        access_token: token
+      });
+
+    } catch (error) {
+      console.error("Error en login:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
   }
-});
+);
 
 module.exports = router;

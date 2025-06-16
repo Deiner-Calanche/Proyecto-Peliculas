@@ -1,0 +1,74 @@
+deinercalanche
+
+kbnNShoAWhMkFzIu
+
+
+
+[
+    {
+        "_id": "684efd735f1e2dfbfe8c0a56",
+        "nombre": "Deiner D",
+        "email": "deiner2@example.com",
+        "password": "$2b$10$IAo0nl5dZEfZ9ma/WvtL.OEVXffbhDAOJghU6q1M/FjxIyiiohNVi",
+        "rol": "Docente",
+        "estado": "Activo",
+        "createdAt": "2025-06-15T17:05:55.340Z",
+        "updatedAt": "2025-06-15T17:05:55.340Z",
+        "__v": 0
+    },
+    {
+        "_id": "684efd915f1e2dfbfe8c0a58",
+        "nombre": "Prueba 2",
+        "email": "prueba2@example.com",
+        "password": "$2b$10$SbCYklxcQgC6TFq0912fyeVV7UMVkSWiMzjR6TrNlymOr4rird.Py",
+        "rol": "Docente",
+        "estado": "Activo",
+        "createdAt": "2025-06-15T17:06:25.032Z",
+        "updatedAt": "2025-06-15T17:06:25.032Z",
+        "__v": 0
+    },
+    {
+        "_id": "684efdac5f1e2dfbfe8c0a5a",
+        "nombre": "Deiner A",
+        "email": "DeinerA@example.com",
+        "password": "$2b$10$bM34I3CUHmGI4s./X6BY0OZRQXPr46SEZIj965sPWawUWuQCuMX8q",
+        "rol": "Administrador",
+        "estado": "Activo",
+        "createdAt": "2025-06-15T17:06:52.305Z",
+        "updatedAt": "2025-06-15T17:06:52.305Z",
+        "__v": 0
+    },
+    {
+        "_id": "684efdeb5f1e2dfbfe8c0a5e",
+        "nombre": "admin",
+        "email": "admin@gmail.com",
+        "password": "$2b$10$R3zk4OzCi467mnnfhOZeOuYSnFgm/WUUITPtyFu9NyUg0BWTYVHdG",
+        "rol": "Administrador",
+        "estado": "Activo",
+        "createdAt": "2025-06-15T17:07:55.554Z",
+        "updatedAt": "2025-06-15T17:07:55.554Z",
+        "__v": 0
+    },
+    {
+        "_id": "684efe085f1e2dfbfe8c0a60",
+        "nombre": "Deiner A",
+        "email": "deinera@gmail.com",
+        "password": "$2b$10$gcS4OsuEespPfuDtM4wXOuyImfpu0lZU14e/XcQmPA/bIQ8td385y",
+        "rol": "Administrador",
+        "estado": "Activo",
+        "createdAt": "2025-06-15T17:08:24.150Z",
+        "updatedAt": "2025-06-15T17:08:24.150Z",
+        "__v": 0
+    },
+    {
+        "_id": "684f5aff570570ffe959d4f1",
+        "nombre": "usuario",
+        "email": "usuario@gmail.com",
+        "password": "$2b$10$pg7tKE15N.0P1Sgj7mx.Luw/H0Lw/u7gP0USNXFvjQHw6YA2wtsOe",
+        "rol": "Docente",
+        "estado": "Activo",
+        "createdAt": "2025-06-15T23:45:03.698Z",
+        "updatedAt": "2025-06-15T23:45:03.698Z",
+        "__v": 0
+    }
+]

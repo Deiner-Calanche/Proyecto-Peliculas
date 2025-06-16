@@ -1,84 +1,110 @@
 const { Router } = require('express');
+const { check, param, validationResult } = require('express-validator');
 const Productora = require('../models/Productora');
-const { validationResult, check } = require('express-validator');
-const mongoose = require('mongoose');
+const { validateJWT } = require('../middleware/validate-jwt');
+const { esAdministrador } = require('../middleware/validate-role-admin');
 
 const router = Router();
 
-// Crear una nueva productora
-router.post('/', [
-    check('nombre', 'invalid.nombre').not().isEmpty(),
-    check('estado', 'invalid.estado').isIn(['Activo', 'Inactivo'])
-], async function(req, res) {
+// Middleware para validar errores
+const validarErrores = (req, res, next) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    return res.status(400).json({ errores: errores.array() });
+  }
+  next();
+};
+
+// Crear una nueva productora (solo admin)
+router.post(
+  '/',
+  validateJWT,
+  esAdministrador,
+  [
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('estado', 'Estado inválido').isIn(['Activo', 'Inactivo'])
+  ],
+  validarErrores,
+  async (req, res) => {
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ message: errors.array() });
-        }
+      let productora = new Productora({
+        nombre: req.body.nombre,
+        estado: req.body.estado,
+        slogan: req.body.slogan,
+        descripcion: req.body.descripcion,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
 
-        let productora = new Productora();
-        productora.nombre = req.body.nombre;
-        productora.estado = req.body.estado;
-        productora.slogan = req.body.slogan;
-        productora.descripcion = req.body.descripcion;
-        productora.createdAt = new Date();
-        productora.updatedAt = new Date();
-
-        productora = await productora.save();
-        res.send(productora);
+      await productora.save();
+      res.status(201).json(productora);
     } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
+      console.error(error);
+      res.status(500).json({ error: 'Error al crear la productora' });
     }
+  }
+);
+
+// Obtener todas las productoras (requiere token)
+router.get('/', validateJWT, async (req, res) => {
+  try {
+    const productoras = await Productora.find();
+    res.json(productoras);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener productoras' });
+  }
 });
 
-// Obtener todas las productoras
-router.get('/', async function(req, res) {
+// Actualizar una productora (solo admin)
+router.put(
+  '/:id',
+  validateJWT,
+  esAdministrador,
+  [
+    param('id').isMongoId().withMessage('ID inválido'),
+    check('nombre').optional().notEmpty().withMessage('Nombre no puede estar vacío'),
+    check('estado').optional().isIn(['Activo', 'Inactivo']).withMessage('Estado inválido')
+  ],
+  validarErrores,
+  async (req, res) => {
     try {
-        const productoras = await Productora.find();
-        res.send(productoras);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
-    }
-});
+      req.body.updatedAt = new Date();
 
-// Actualizar una productora
-router.put('/:id', async function(req, res) {
+      const productora = await Productora.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+      if (!productora) {
+        return res.status(404).json({ message: 'Productora no encontrada' });
+      }
+
+      res.json(productora);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al actualizar la productora' });
+    }
+  }
+);
+
+// Eliminar una productora (solo admin)
+router.delete(
+  '/:id',
+  validateJWT,
+  esAdministrador,
+  [param('id').isMongoId().withMessage('ID inválido')],
+  validarErrores,
+  async (req, res) => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({ message: 'ID inválido' });
-        }
+      const productora = await Productora.findByIdAndDelete(req.params.id);
+      if (!productora) {
+        return res.status(404).json({ message: 'Productora no encontrada' });
+      }
 
-        const productora = await Productora.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!productora) {
-            return res.status(404).json({ message: 'Productora no encontrada' });
-        }
-
-        res.send(productora);
+      res.json({ message: 'Productora eliminada correctamente' });
     } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
+      console.error(error);
+      res.status(500).json({ error: 'Error al eliminar la productora' });
     }
-});
-
-// Eliminar una productora
-router.delete('/:id', async function(req, res) {
-    try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({ message: 'ID inválido' });
-        }
-
-        const productora = await Productora.findByIdAndDelete(req.params.id);
-        if (!productora) {
-            return res.status(404).json({ message: 'Productora no encontrada' });
-        }
-
-        res.json({ message: 'Productora eliminada correctamente' });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('message error');
-    }
-});
+  }
+);
 
 module.exports = router;

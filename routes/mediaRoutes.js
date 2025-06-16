@@ -3,6 +3,10 @@ const router = express.Router();
 const { body, param, validationResult } = require('express-validator');
 const Media = require('../models/Media');
 
+
+const {validateJWT} = require('../middleware/validate-jwt');
+const {esAdministrador} = require('../middleware/validate-role-admin');
+
 // Middleware de validación de errores
 const validarErrores = (req, res, next) => {
   const errores = validationResult(req);
@@ -16,6 +20,8 @@ const validarErrores = (req, res, next) => {
 router.post(
   '/',
   [
+    validateJWT,
+    esAdministrador,
     body('serial').notEmpty().withMessage('El serial es obligatorio'),
     body('titulo').notEmpty().withMessage('El título es obligatorio'),
     body('sinopsis').notEmpty().withMessage('La sinopsis es obligatoria'),

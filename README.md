@@ -1,82 +1,89 @@
-# 🎬 Aplicación Web de Películas - Ingeniería Web II
+# 🎬 API REST - Gestión de Películas con Autenticación y Autorización (Evidencia 3)
+
+## 📚 Evidencia de Aprendizaje 3 - Ingeniería Web II
+
+**Nombre del estudiante:** Deiner David Calanche Villa  
+**Programa:** Ingeniería de Software  
+**Asignatura:** Ingeniería Web II  
+**Institución:** Institución Universitaria Digital de Antioquia  
+**Fecha:** Junio de 2025
+
+---
 
 ## 📌 Descripción del Proyecto
-La **Institución Universitaria Digital de Antioquia** requiere una **aplicación web** para la gestión y publicación de películas en modo administrador. Esta aplicación permitirá a los docentes, estudiantes, colaboradores y público en general ver películas online de forma gratuita, sin necesidad de registro. 
 
-Se busca desarrollar una plataforma similar a **Cuevana**, pero sin infringir derechos de autor, ya que la universidad se encargará de adquirir las licencias necesarias.
+Esta API REST permite gestionar películas y series, incorporando **autenticación con JWT** y **autorización por roles** (`Administrador` y `Docente`).  
+Es parte de la Evidencia de Aprendizaje 3 del curso Ingeniería Web II.
 
-## ⚙️ Arquitectura y Tecnologías
-La aplicación será desarrollada con una **arquitectura monolítica**, separando el **Frontend** del **Backend**, y contará con los siguientes cinco módulos:
+---
 
-## 📂 Módulos Principales
+## 🛠️ Tecnologías Utilizadas
 
-### 1️⃣ Módulo de Género
-Permite registrar y editar géneros de películas. Inicialmente se contará con: **acción, aventura, ciencia ficción, drama y terror**, con la posibilidad de agregar más en el futuro.
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- JWT (`jsonwebtoken`)
+- Bcrypt.js (encriptación)
+- Express-validator (validaciones)
 
-**Datos almacenados:**
-- Nombre
-- Estado (Activo/Inactivo)
-- Fecha de creación
-- Fecha de actualización
-- Descripción
+---
 
-### 2️⃣ Módulo de Director
-Permite registrar y editar el director principal de cada producción.
+## 🔐 Funcionalidades de Autenticación y Autorización
 
-**Datos almacenados:**
-- Nombres
-- Estado (Activo/Inactivo)
-- Fecha de creación
-- Fecha de actualización
+### 🔸 Autenticación
 
-### 3️⃣ Módulo Productora
-Registra y edita las productoras principales (**Disney, Warner, Paramount, etc.**).
+- **Ruta:** `POST /auth/login`
+- **Descripción:** Permite a los usuarios autenticarse con email y contraseña.
+- **Respuesta:** Token JWT válido por 1 hora.
 
-**Datos almacenados:**
-- Nombre de la productora
-- Estado (Activo/Inactivo)
-- Fecha de creación
-- Fecha de actualización
-- Slogan
-- Descripción
+### 🔸 Encriptación de Contraseña
 
-### 4️⃣ Módulo Tipo
-Define los tipos de multimedia. Inicialmente se soportará **películas y series**.
+- Las contraseñas de los usuarios se almacenan **encriptadas** usando `bcryptjs`.
 
-**Datos almacenados:**
-- Nombre
-- Fecha de creación
-- Fecha de actualización
-- Descripción
+### 🔸 Autorización por Rol
 
-### 5️⃣ Módulo de Media (Películas y Series)
-Gestiona el registro, edición, eliminación y consulta de producciones.
+| Rol          | Permisos                                                                 |
+|--------------|--------------------------------------------------------------------------|
+| Administrador| Crear, editar, eliminar y ver medios, géneros, tipos, directores, etc.   |
+| Docente      | Solo puede **ver** los inventarios (módulo Media)                        |
 
-**Datos almacenados:**
-- Serial único
-- Título
-- Sinopsis
-- URL de la película (debe ser único)
-- Imagen o foto de portada
-- Fecha de creación
-- Fecha de actualización
-- Año de estreno
-- Género principal (seleccionado de los géneros activos)
-- Director principal (seleccionado de los directores activos)
-- Productora (seleccionada de las productoras activas)
-- Tipo (seleccionado del módulo de Tipo)
+### 🔸 Middleware
 
-## 🛠️ Rol del Desarrollador
-Como **Ingeniero Web** en este proyecto, tus principales responsabilidades incluyen:
-✅ Comprender el desafío propuesto
-✅ Realizar análisis y diseño ágil
-✅ Desarrollar tanto el **Backend** (incluyendo la base de datos) como el **Frontend**
-✅ Integrar y desplegar la aplicación
+- `validate-jwt.js`: Verifica que el token JWT esté presente y sea válido.
+- `validate-role-admin.js`: Verifica que el usuario tenga el rol `Administrador`.
 
-## 🚀 Objetivo del Proyecto
-El sistema se desarrollará con enfoque administrativo para la **gestión de películas**. 
+---
 
-🔸 No se requiere un sistema de registro de usuarios por el momento.
-🔸 No se implementarán módulos de seguridad en esta fase.
-🔸 No está orientado a usuarios finales (estudiantes, docentes, público en general).
+## 📂 Módulos Protegidos
+
+| Módulo       | Métodos protegidos                   | Acceso requerido      |
+|--------------|--------------------------------------|------------------------|
+| Media        | `POST`, `PUT`, `DELETE`              | Administrador          |
+| Media        | `GET`                                | Administrador y Docente|
+| Género       | `POST`, `PUT`, `DELETE`              | Administrador          |
+| Director     | `POST`, `PUT`, `DELETE`              | Administrador          |
+| Productora   | `POST`, `PUT`, `DELETE`              | Administrador          |
+| Tipo         | `POST`, `PUT`, `DELETE`              | Administrador          |
+
+---
+
+## 🔧 Instalacion
+
+
+git clone https://github.com/usuario/proyecto-api-peliculas.git
+cd proyecto-api-peliculas
+
+---
+
+npm install
+
+---
+
+## 🎥 Video de la Evidencia
+📺 Link al video explicativo:
+👉 https://drive.google.com/file/d/1-U1lxt1eomd1rwCz8YhXc52g5lB3rKKW/view?usp=sharing
+
+
+
+
 
