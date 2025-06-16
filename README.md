@@ -1,10 +1,10 @@
 # 🎬 API REST - Gestión de Películas con Autenticación y Autorización (Evidencia 3)
 
-## 📚 Evidencia de Aprendizaje 3 - Ingeniería Web II
+## 📚 Evidencia de Aprendizaje 3 - Desarrollo de Sofware Seguro 
 
 **Nombre del estudiante:** Deiner David Calanche Villa  
-**Programa:** Ingeniería de Software  
-**Asignatura:** Ingeniería Web II  
+**Programa:** Tecnologo en Desarrollo de Sofware  
+**Asignatura:** Desarrollo de Sofware Seguro  
 **Institución:** Institución Universitaria Digital de Antioquia  
 **Fecha:** Junio de 2025
 
